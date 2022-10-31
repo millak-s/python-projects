@@ -1,0 +1,1 @@
+x_player.get_move(game)
