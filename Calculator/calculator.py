@@ -3,140 +3,48 @@ import button_func as fnc
 
 root = Tk()
 root.title("Calculator")
+root.iconbitmap("E:/Downloads/Images/Calculator.ico")
 
-n = Entry(root, width=40, borderwidth=5, justify="right")
-n.grid(row=0, column=0, columnspan=5, padx=10, pady=10)
+n = Entry(width=40, borderwidth=5, justify="right")
+n.grid(row=0, column=0, columnspan=5)
 
-# Number buttons
-button_1 = Button(root,
-                  text="1",
-                  padx=20,
-                  pady=20,
-                  command=lambda: fnc.button_click(n, 1)).grid(row=4, column=0)
-button_2 = Button(root,
-                  text="2",
-                  padx=20,
-                  pady=20,
-                  command=lambda: fnc.button_click(n, 2)).grid(row=4, column=1)
-button_3 = Button(root,
-                  text="3",
-                  padx=20,
-                  pady=20,
-                  command=lambda: fnc.button_click(n, 3)).grid(row=4, column=2)
 
-button_4 = Button(root,
-                  text="4",
-                  padx=20,
-                  pady=20,
-                  command=lambda: fnc.button_click(n, 4)).grid(row=3, column=0)
-button_5 = Button(root,
-                  text="5",
-                  padx=20,
-                  pady=20,
-                  command=lambda: fnc.button_click(n, 5)).grid(row=3, column=1)
-button_6 = Button(root,
-                  text="6",
-                  padx=20,
-                  pady=20,
-                  command=lambda: fnc.button_click(n, 6)).grid(row=3, column=2)
+def buttons(str, x, y, cmd, tup):
+    btn = Button(root, text=str, padx=x, pady=y, command=cmd)
+    btn.grid(row=tup[0], column=tup[1])
+    if str == "=":
+        btn.grid(columnspan=2)
+    return btn
 
-button_7 = Button(root,
-                  text="7",
-                  padx=20,
-                  pady=20,
-                  command=lambda: fnc.button_click(n, 7)).grid(row=2, column=0)
-button_8 = Button(root,
-                  text="8",
-                  padx=20,
-                  pady=20,
-                  command=lambda: fnc.button_click(n, 8)).grid(row=2, column=1)
-button_9 = Button(root,
-                  text="9",
-                  padx=20,
-                  pady=20,
-                  command=lambda: fnc.button_click(n, 9)).grid(row=2, column=2)
 
-button_0 = Button(root,
-                  text="0",
-                  padx=20,
-                  pady=20,
-                  command=lambda: fnc.button_click(n, 0)).grid(row=5, column=0)
+# Number buttons and ans
+button_1 = buttons("1", 20, 20, lambda: fnc.button_click(n, 1), (4, 0))
+button_2 = buttons("2", 20, 20, lambda: fnc.button_click(n, 2), (4, 1))
+button_3 = buttons("3", 20, 20, lambda: fnc.button_click(n, 3), (4, 2))
+button_4 = buttons("4", 20, 20, lambda: fnc.button_click(n, 4), (3, 0))
+button_5 = buttons("5", 20, 20, lambda: fnc.button_click(n, 5), (3, 1))
+button_6 = buttons("6", 20, 20, lambda: fnc.button_click(n, 6), (3, 2))
+button_7 = buttons("7", 20, 20, lambda: fnc.button_click(n, 7), (2, 0))
+button_8 = buttons("8", 20, 20, lambda: fnc.button_click(n, 8), (2, 1))
+button_9 = buttons("9", 20, 20, lambda: fnc.button_click(n, 9), (2, 2))
+button_0 = buttons("0", 20, 20, lambda: fnc.button_click(n, 0), (5, 0))
+decimal = buttons(".", 22, 20, lambda: fnc.button_click(n, "."), (5, 1))
+ans = buttons("ans", 14, 20, lambda: fnc.button_click(n, fnc.ans), (5, 2))
 
-# operators and signs
-sign = Button(root,
-              text="±",
-              padx=20,
-              pady=20,
-              command=lambda: fnc.operations(n, "±")).grid(row=2, column=3)
+# operators and sign
+equal = buttons("=", 49, 20, lambda: fnc.result(n), (5, 3))
+signs = buttons("±", 20, 20, lambda: fnc.sign(n), (2, 3))
+plus = buttons("+", 20, 20, lambda: fnc.operators(n, "+"), (4, 3))
+subtract = buttons("-", 22, 20, lambda: fnc.operators(n, "-"), (4, 4))
+multiply = buttons("×", 20, 20, lambda: fnc.operators(n, "*"), (3, 3))
+divide = buttons("÷", 21, 20, lambda: fnc.operators(n, "/"), (3, 4))
+percent = buttons("%", 20, 20, lambda: fnc.operators(n, '%'), (2, 4))
+exponent = buttons("^", 19, 20, lambda: fnc.operators(n, "^"), (1, 2))
+sqr_root = buttons("√", 19, 20, lambda: fnc.operators(n, "√"), (1, 1))
 
-ans = Button(root,
-             text="ans",
-             padx=16,
-             pady=20,
-             command=lambda: fnc.button_click(n, ans)).grid(row=5, column=2)
+# others
+off = buttons("OFF", 14, 20, root.quit, (1, 4))
+clear = buttons("AC", 15, 20, lambda: fnc.button_clear(n, "AC"), (1, 0))
+bt_del = buttons("DEL", 14, 20, lambda: fnc.button_clear(n, "DEL"), (1, 3))
 
-plus = Button(root,
-              text="+",
-              padx=19,
-              pady=20,
-              command=lambda: fnc.operations(n, "+")).grid(row=4, column=3)
-
-subtract = Button(root,
-                  text="-",
-                  padx=19,
-                  pady=20,
-                  command=lambda: fnc.operations(n, "-")).grid(row=4, column=4)
-multiply = Button(root,
-                  text="×",
-                  padx=20,
-                  pady=20,
-                  command=lambda: fnc.operations(n, "*")).grid(row=3, column=3)
-divide = Button(root,
-                text="÷",
-                padx=19,
-                pady=20,
-                command=lambda: fnc.operations(n, "/")).grid(row=3, column=4)
-
-equal = Button(root, text="=", padx=50, pady=20,
-               command=lambda: fnc.result(n)).grid(row=5,
-                                                   column=3,
-                                                   columnspan=2)
-
-percent = Button(root,
-                 text="%",
-                 padx=19,
-                 pady=20,
-                 command=lambda: fnc.operations(n, '%')).grid(row=2, column=4)
-
-decimal = Button(root,
-                 text=".",
-                 padx=21,
-                 pady=20,
-                 command=lambda: fnc.button_click(n, ".")).grid(row=5,
-                                                                column=1)
-exponent = Button(root,
-                  text="^",
-                  padx=20,
-                  pady=20,
-                  command=lambda: fnc.operations(n, "^")).grid(row=1, column=2)
-
-n_root = Button(root,
-                text="√",
-                padx=20,
-                pady=20,
-                command=lambda: fnc.operations(n, "√")).grid(row=1, column=1)
-
-# Delete and clear buttons
-clear = Button(root,
-               text="AC",
-               padx=15,
-               pady=20,
-               command=lambda: fnc.button_clear(n, "AC")).grid(row=1, column=0)
-
-bt_del = Button(root,
-                text="DEL",
-                padx=15,
-                pady=20,
-                command=lambda: fnc.button_clear(n, "DEL")).grid(row=1,
-                                                                 column=3)
 root.mainloop()

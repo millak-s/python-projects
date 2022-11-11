@@ -1,16 +1,42 @@
 from tkinter import *
 
+# TODO: make the ans button delete anything that appears before it is pressed
+
 
 def button_click(n, number):
-    if number == "(-)":
-        n.insert(0, number)
-    current = n.get()
     if errors(n):
         return
+    if number == "-":
+        n.insert(0, number)
+    current = n.get()
     button_clear(n, "AC")
     n.insert(0, f"{current}{number}")
 
 
+# converts from from converts numbers to appropriate type
+def int_float(n, num):
+    if errors(n):
+        return
+    if type(num) is str:
+        try:
+            return float(num) if "." in num else int(num)
+        except ValueError:
+            return num
+    else:
+        return int(num) if num - int(num) == 0 else float(num)
+
+
+#  Changes integer from positive to negative and vice-versa
+def sign(n):
+    current = n.get()
+    current = float(current)
+    n.delete(0, END)
+    current /= -1
+    current = int_float(n, current)
+    n.insert(0, f"{current}")
+
+
+# Deletes entry from end or clears the whole entry
 def button_clear(n, str):
     if str == "AC":
         n.delete(0, END)
@@ -20,56 +46,63 @@ def button_clear(n, str):
         n.delete(len(n.get()) - 1)
 
 
+#  checks for errors
 def errors(n):
-    errors = ["Math Error", "SyntaxError"]
-    return n.get() in errors
+    errors = ["Math Error", "SyntaxError", "None"]
+    if any([i in n.get() for i in errors]):
+        return True
+    return False
 
 
-def operations(n, symbol):
-    global f_num
+def operators(n, symbol):
     global operator
     operator = symbol
+    global f_num
+
     if errors(n):
         return
+
     if len(n.get()) == 0 and symbol in "√":
         f_num = symbol
         n.insert(0, symbol)
         return
-    try:
-        f_num = float(n.get()) if "." in n.get() else int(n.get())
-    except ValueError:
-        n.insert(0, "SyntaxError")
+
+    f_num = int_float(n, n.get())
     button_clear(n, "AC")
+
+
+def operations(n):
+    if errors(n):
+        return
+
+    if "√" in n.get():
+        second_number = int_float(n, n.get()[1])
+    else:
+        second_number = int_float(n, n.get())
+
+    button_clear(n, "AC")
+    global ans
+
+    if operator == "+":
+        return f_num + second_number
+    elif operator == "-":
+        return f_num - second_number
+    elif operator == "*":
+        return f_num * second_number
+    elif operator == "^":
+        return f_num**second_number
+    elif operator == "√":
+        return second_number**(1 / 2)
+    elif operator == "%":
+        return f_num / 100
+    elif operator == "/":
+        try:
+            return f_num / second_number
+        except ZeroDivisionError:
+            return "Math Error"
 
 
 def result(n):
-    if errors(n):
-        return
-    if "√" not in n.get():
-        second_number = float(n.get()) if "." in n.get() else int(n.get())
-    else:
-        second_number = float(n.get()[1:]) if "." in n.get()[1:] else int(
-            n.get()[1:])
-    button_clear(n, "AC")
-    global ans
-    if operator == "+":
-        ans = f_num + second_number
-    elif operator == "-":
-        ans = f_num - second_number
-    elif operator == "*":
-        ans = f_num * second_number
-    elif operator == "^":
-        ans = f_num**second_number
-    elif operator == "√":
-        ans = second_number**(1 / 2)
-    elif operator == "%":
-        ans = f_num / 100
-    else:
-        try:
-            ans = f_num / second_number
-        except ZeroDivisionError:
-            n.insert(0, "Math Error")
-            return
-
-    ans = int(ans) if (ans - int(ans)) == 0 else ans
-    n.insert(0, f"{ans}")
+    result = operations(n)
+    int_float(n, result)
+    n.insert(0, f"{result}")
